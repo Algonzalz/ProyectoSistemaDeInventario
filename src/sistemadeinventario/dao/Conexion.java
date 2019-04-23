@@ -13,6 +13,7 @@ public class Conexion {
     private static final String PASS = "";
     private static final String URL = "jdbc:mysql://localhost:3306/bdsistemainventario?useServerPrepStmts=true";
     protected static PreparedStatement pst=null;
+    protected static PreparedStatement pst2=null;
     protected static ResultSet rs=null;
 
     private Connection con = null;
@@ -46,7 +47,7 @@ public class Conexion {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("NO SE CERRO LA CONEXION");
+            System.out.println("No se cerro la conexion");
         }
     }
 }

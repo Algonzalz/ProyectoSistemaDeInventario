@@ -1,6 +1,6 @@
 package sistemadeinventario.modelo;
 
-public class Proveedor {
+public class Proveedor extends Persona {
 
     private int codProveedor;
     private String cedProveedor;
