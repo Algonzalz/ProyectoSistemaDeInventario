@@ -37,7 +37,7 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
                     JOptionPane.showMessageDialog(null, "NO SE PUDO INGRESAR EL CLIENTE");
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "SNO SE PUDO INGRESAR EL CLIENTE");
+                JOptionPane.showMessageDialog(null, "NO SE PUDO INGRESAR EL CLIENTE");
             }
 
         } catch (Exception e) {
@@ -155,7 +155,7 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
 
             pst = getCon().prepareStatement("SELECT c.codCliente, p.nbPersona, p.apPersona, c.cedCliente, p.dirPersona, p.numCel_Persona, c.correoCliente\n"
                     + "FROM persona p INNER JOIN  cliente c ON p.codPersona=c.codCliente \n"
-                    + "WHERE (p.nbPersona LIKE '%?%' OR c.cedCliente LIKE '%?%' )");
+                    + "WHERE (p.nbPersona LIKE CONCAT('%',?,'%') OR c.cedCliente LIKE CONCAT('%',?,'%')) ");
             pst.setString(1, c.getNbPersona());
             pst.setString(2, c.getCedCliente());
 
@@ -174,7 +174,7 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
 
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showMessageDialog(null, e+"\nNo se pudo consultar el cliente");
         } finally {
             closeConnection();
         }
@@ -182,6 +182,9 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
         return c2;
     }
 
+    
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
     @Override
     public int primerCliente() {
 
@@ -226,21 +229,5 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
         return true;
     }
     
-    public static void main(String[] args) {
-        ClienteDaoImpl aldaoim=new ClienteDaoImpl();
-        Cliente c=new Cliente();
-        
-        c.setCodPersona(1);
-        c.setNbPersona("Henrito");
-        c.setApPersona("Gonzalez");
-        c.setDirPersona("Palo verde");
-        c.setNumCel_Persona("04241428772");
-        
-        c.setCedCliente("24888357");
-        c.setCorreoCliente("gonzalezhenry95@gmail.com");
-        
-//        aldaoim.insertar(c);
-          aldaoim.modificar(c);
-    }
 
 }
