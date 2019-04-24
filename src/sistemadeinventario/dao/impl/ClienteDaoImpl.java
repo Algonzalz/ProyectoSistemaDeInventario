@@ -25,7 +25,7 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
             pst.setString(1, c.getNbPersona());
             pst.setString(2, c.getApPersona());
             pst.setString(3, c.getDirPersona());
-            pst.setInt(4, c.getNumCel_Persona());
+            pst.setString(4, c.getNumCel_Persona());
 
             pst2.setString(1, "V-" + c.getCedCliente());
             pst2.setString(2, c.getCorreoCliente());
@@ -58,12 +58,12 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
             pst.setString(1, c.getNbPersona());
             pst.setString(2, c.getApPersona());
             pst.setString(3, c.getDirPersona());
-            pst.setInt(4, c.getNumCel_Persona());
+            pst.setString(4, c.getNumCel_Persona());
             pst.setInt(5, c.getCodPersona());
 
             pst2.setString(1, "V-" + c.getCedCliente());
             pst2.setString(2, c.getCorreoCliente());
-            pst.setInt(3, c.getCodPersona());
+            pst2.setInt(3, c.getCodPersona());
             int N = pst.executeUpdate();
             if (N != 0) {
                 int N2 = pst2.executeUpdate();
@@ -127,7 +127,7 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
                 c.setNbPersona(rs.getString("nbPersona"));
                 c.setApPersona(rs.getString("apPersona"));
                 c.setDirPersona(rs.getString("dirPersona"));
-                c.setNumCel_Persona(rs.getInt("numCel_Persona"));
+                c.setNumCel_Persona(rs.getString("numCel_Persona"));
 
                 c.setCodCliente(rs.getInt("codCliente"));
                 c.setCedCliente(rs.getString("cedCliente"));
@@ -155,7 +155,7 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
 
             pst = getCon().prepareStatement("SELECT c.codCliente, p.nbPersona, p.apPersona, c.cedCliente, p.dirPersona, p.numCel_Persona, c.correoCliente\n"
                     + "FROM persona p INNER JOIN  cliente c ON p.codPersona=c.codCliente \n"
-                    + "WHERE (nbPersona LIKE '%?%' OR cedCliente LIKE '%?%' )");
+                    + "WHERE (p.nbPersona LIKE '%?%' OR c.cedCliente LIKE '%?%' )");
             pst.setString(1, c.getNbPersona());
             pst.setString(2, c.getCedCliente());
 
@@ -166,7 +166,7 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
                 c2.setNbPersona(rs.getString("nbPersona"));
                 c2.setApPersona(rs.getString("apPersona"));
                 c2.setDirPersona(rs.getString("dirPersona"));
-                c2.setNumCel_Persona(rs.getInt("numCel_Persona"));
+                c2.setNumCel_Persona(rs.getString("numCel_Persona"));
 
                 c2.setCodCliente(rs.getInt("codCliente"));
                 c2.setCedCliente(rs.getString("cedCliente"));
@@ -224,6 +224,23 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
         }
 
         return true;
+    }
+    
+    public static void main(String[] args) {
+        ClienteDaoImpl aldaoim=new ClienteDaoImpl();
+        Cliente c=new Cliente();
+        
+        c.setCodPersona(1);
+        c.setNbPersona("Henrito");
+        c.setApPersona("Gonzalez");
+        c.setDirPersona("Palo verde");
+        c.setNumCel_Persona("04241428772");
+        
+        c.setCedCliente("24888357");
+        c.setCorreoCliente("gonzalezhenry95@gmail.com");
+        
+//        aldaoim.insertar(c);
+          aldaoim.modificar(c);
     }
 
 }

@@ -6,12 +6,12 @@ public class Persona {
     private String nbPersona;
     private String apPersona;
     private String dirPersona;
-    private int numCel_Persona;
+    private String numCel_Persona;
 
     public Persona() {
     }
 
-    public Persona(int codPersona, String nbPersona, String apPersona, String dirPersona, int numCel_Persona) {
+    public Persona(int codPersona, String nbPersona, String apPersona, String dirPersona, String numCel_Persona) {
         this.codPersona = codPersona;
         this.nbPersona = nbPersona;
         this.apPersona = apPersona;
@@ -51,11 +51,11 @@ public class Persona {
         this.dirPersona = dirPersona;
     }
 
-    public int getNumCel_Persona() {
+    public String getNumCel_Persona() {
         return numCel_Persona;
     }
 
-    public void setNumCel_Persona(int numCel_Persona) {
+    public void setNumCel_Persona(String numCel_Persona) {
         this.numCel_Persona = numCel_Persona;
     }
 
