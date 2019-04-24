@@ -228,6 +228,7 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
 
         return true;
     }
-    
-
+    public static void main(String[] args) {
+        System.out.println("Hola");
+    }
 }
