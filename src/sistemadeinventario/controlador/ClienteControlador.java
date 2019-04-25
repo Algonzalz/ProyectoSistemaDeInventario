@@ -100,4 +100,14 @@ public class ClienteControlador {
         return model;
 
     }
+
+    public int primerCliente(){
+    
+        return clidao.primerCliente();
+    }
+    
+    public void insertarCliente(){
+        
+        clidao.insertarPrimerCliente();
+    }
 }
