@@ -12,6 +12,6 @@ public interface ICrud<T> {
 
     List<T> listarTodos();
 
-    T consultar(T t);
+    List<T> consultar(T t);
 
 }

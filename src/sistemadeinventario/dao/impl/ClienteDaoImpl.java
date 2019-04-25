@@ -61,7 +61,7 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
             pst.setString(4, c.getNumCel_Persona());
             pst.setInt(5, c.getCodPersona());
 
-            pst2.setString(1, "V-" + c.getCedCliente());
+            pst2.setString(1, "V-" + c.getCedCliente());    //modificar el V- colocarlo dinamico en un jcombobox en la vista (ejemplo banesco)
             pst2.setString(2, c.getCorreoCliente());
             pst2.setInt(3, c.getCodPersona());
             int N = pst.executeUpdate();
@@ -116,7 +116,7 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
 
     @Override
     public List<Cliente> listarTodos() {
-        List<Cliente> arrA = new ArrayList<>();
+        List<Cliente> arrC = new ArrayList<>();
         createConnection();
         try {
             pst = getCon().prepareStatement("SELECT * FROM cliente c INNER JOIN persona p ON c.codCliente=p.codPersona");
@@ -133,7 +133,7 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
                 c.setCedCliente(rs.getString("cedCliente"));
                 c.setCorreoCliente(rs.getString("correoCliente"));
 
-                arrA.add(c);
+                arrC.add(c);
             }
 
         } catch (SQLException e) {
@@ -143,21 +143,21 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
             closeConnection();
         }
 
-        return arrA;
+        return arrC;
     }
 
     @Override
-    public Cliente consultar(Cliente c) {
+    public List<Cliente> consultar(Cliente c) {
         Cliente c2 = null;
-
+        List<Cliente> arrC = new ArrayList<>();
         createConnection();
         try {
 
             pst = getCon().prepareStatement("SELECT c.codCliente, p.nbPersona, p.apPersona, c.cedCliente, p.dirPersona, p.numCel_Persona, c.correoCliente\n"
                     + "FROM persona p INNER JOIN  cliente c ON p.codPersona=c.codCliente \n"
-                    + "WHERE (p.nbPersona LIKE CONCAT('%',?,'%') OR c.cedCliente LIKE CONCAT('%',?,'%')) ");
-            pst.setString(1, c.getNbPersona());
-            pst.setString(2, c.getCedCliente());
+                    + "WHERE c.cedCliente LIKE CONCAT('%',?,'%') ");
+
+            pst.setString(1, c.getCedCliente());
 
             rs = pst.executeQuery();
 
@@ -171,18 +171,17 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
                 c2.setCodCliente(rs.getInt("codCliente"));
                 c2.setCedCliente(rs.getString("cedCliente"));
                 c2.setCorreoCliente(rs.getString("correoCliente"));
-
+                
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e+"\nNo se pudo consultar el cliente");
+            JOptionPane.showMessageDialog(null, e + "\nNo se pudo consultar el cliente");
         } finally {
             closeConnection();
         }
 
-        return c2;
+        return arrC;
     }
 
-    
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
     @Override
@@ -208,7 +207,7 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
     }
 
     @Override
-    public boolean insertarPrimerCliente() {
+    public void insertarPrimerCliente() {
         try {
             createConnection();
             pst = getCon().prepareStatement("INSERT INTO persona(nbPersona,apPersona,dirPersona,numCel_Persona)"
@@ -219,16 +218,11 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
 
             pst.executeUpdate();
             pst2.executeUpdate();
-           
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         } finally {
             closeConnection();
         }
-
-        return true;
-    }
-    public static void main(String[] args) {
-        System.out.println("Hola");
     }
 }

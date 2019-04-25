@@ -6,5 +6,5 @@ public interface IClienteDAO extends ICrud<Cliente> {
 
     int primerCliente();
 
-    boolean insertarPrimerCliente();
+    void insertarPrimerCliente();
 }
