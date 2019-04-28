@@ -29,17 +29,7 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
 
             pst2.setString(1, "V-" + c.getCedCliente());
             pst2.setString(2, c.getCorreoCliente());
-            int N = pst.executeUpdate();
-            if (N != 0) {
-                int N2 = pst2.executeUpdate();
-                if (N2 != 0) {
-                } else {
-                    JOptionPane.showMessageDialog(null, "NO SE PUDO INGRESAR EL CLIENTE");
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "NO SE PUDO INGRESAR EL CLIENTE");
-            }
-
+            pst.executeUpdate();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         } finally {
@@ -51,29 +41,25 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
     public void modificar(Cliente c) {
         try {
             createConnection();
-            pst = getCon().prepareStatement("UPDATE persona SET nbPersona = ?, apPersona=?, dirPersona=?, numCel_Persona=? WHERE codPersona=?");
+            if (verificar(c)) {
+                pst = getCon().prepareStatement("UPDATE persona SET nbPersona = ?, apPersona=?, dirPersona=?, numCel_Persona=? WHERE codPersona=?");
 
-            pst2 = getCon().prepareStatement("UPDATE Cliente SET cedCliente = ?, correoCliente=? WHERE codCliente=?");
+                pst2 = getCon().prepareStatement("UPDATE Cliente SET cedCliente = ?, correoCliente=? WHERE codCliente=?");
 
-            pst.setString(1, c.getNbPersona());
-            pst.setString(2, c.getApPersona());
-            pst.setString(3, c.getDirPersona());
-            pst.setString(4, c.getNumCel_Persona());
-            pst.setInt(5, c.getCodPersona());
+                pst.setString(1, c.getNbPersona());
+                pst.setString(2, c.getApPersona());
+                pst.setString(3, c.getDirPersona());
+                pst.setString(4, c.getNumCel_Persona());
+                pst.setInt(5, c.getCodPersona());
 
-            pst2.setString(1, "V-" + c.getCedCliente());    //modificar el V- colocarlo dinamico en un jcombobox en la vista (ejemplo banesco)
-            pst2.setString(2, c.getCorreoCliente());
-            pst2.setInt(3, c.getCodPersona());
-            int N = pst.executeUpdate();
-            if (N != 0) {
-                int N2 = pst2.executeUpdate();
-                if (N2 != 0) {
-                } else {
-                    JOptionPane.showMessageDialog(null, "NO SE PUDO MODIFICAR EL CLIENTE");
-                }
+                pst2.setString(1, "V-" + c.getCedCliente());    //modificar el V- colocarlo dinamico en un jcombobox en la vista (ejemplo banesco)
+                pst2.setString(2, c.getCorreoCliente());
+                pst2.setInt(3, c.getCodPersona());
+                pst.executeUpdate();
             } else {
-                JOptionPane.showMessageDialog(null, "NO SE PUDO MODIFICAR EL CLIENTE");
+                JOptionPane.showMessageDialog(null, "El Cliente no existe en los registros, Verificque!!");
             }
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         } finally {
@@ -86,27 +72,20 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
     public void eliminar(Cliente c) {
         try {
             createConnection();
+            if (verificar(c)) {
 
-            pst = getCon().prepareStatement("DELETE FROM persona WHERE codPersona=?");
-            pst2 = getCon().prepareStatement("DELETE FROM cliente WHERE codCliente=?");
+                pst = getCon().prepareStatement("DELETE FROM persona WHERE codPersona=?");
+                pst2 = getCon().prepareStatement("DELETE FROM cliente WHERE codCliente=?");
 
-            pst.setInt(1, c.getCodPersona());
+                pst.setInt(1, c.getCodPersona());
 
-            pst2.setInt(1, c.getCodCliente());
+                pst2.setInt(1, c.getCodCliente());
 
-            int N = pst.executeUpdate();
-            if (N != 0) {
-                int N2 = pst2.executeUpdate();
-
-                if (N2 != 0) {
-
-                } else {
-                    JOptionPane.showMessageDialog(null, "NO SE PUDO ELIMINAR EL CLIENTE");
-                }
-
+                pst.executeUpdate();
             } else {
-                JOptionPane.showMessageDialog(null, "NO SE PUDO ELIMINAR EL CLIENTE");
+                JOptionPane.showMessageDialog(null, "El Cliente no existe en los registros, Verificque!!");
             }
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         } finally {
@@ -119,7 +98,7 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
         List<Cliente> arrC = new ArrayList<>();
         createConnection();
         try {
-            pst = getCon().prepareStatement("SELECT * FROM cliente c INNER JOIN persona p ON c.codCliente=p.codPersona");
+            pst = getCon().prepareStatement("SELECT * FROM cliente c INNER JOIN persona p ON c.codCliente=p.codPersona ORDER BY codPersona DESC");
             rs = pst.executeQuery();
 
             while (rs.next()) {
@@ -155,7 +134,7 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
 
             pst = getCon().prepareStatement("SELECT c.codCliente, p.nbPersona, p.apPersona, c.cedCliente, p.dirPersona, p.numCel_Persona, c.correoCliente\n"
                     + "FROM persona p INNER JOIN  cliente c ON p.codPersona=c.codCliente \n"
-                    + "WHERE c.cedCliente LIKE CONCAT('%',?,'%') ");
+                    + "WHERE c.cedCliente LIKE CONCAT('%',?,'%') ORDER BY codPersona DESC ");
 
             pst.setString(1, c.getCedCliente());
 
@@ -171,7 +150,7 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
                 c2.setCodCliente(rs.getInt("codCliente"));
                 c2.setCedCliente(rs.getString("cedCliente"));
                 c2.setCorreoCliente(rs.getString("correoCliente"));
-                
+
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e + "\nNo se pudo consultar el cliente");
@@ -183,6 +162,7 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
     }
 
     ////////////////////////////////////////////////////////////////////////////
+    //////////////////// METODOS DE APLCIACION DE LA CLASE//////////////////////
     ////////////////////////////////////////////////////////////////////////////
     @Override
     public int primerCliente() {
@@ -224,5 +204,30 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
         } finally {
             closeConnection();
         }
+    }
+
+    /**
+     * METODO PARA VERIFICAR SI EXISTE EL CLIENTE EN LA BASE DE DATOS SE USA EN
+     * EL MODIFICAR Y ELIMINAR
+     */
+    @Override
+    public boolean verificar(Cliente c) {
+        try {
+            createConnection();
+            pst = getCon().prepareStatement("SELECT *FROM persona p INNER JOIN cliente c ON p.codPersona = c.codCliente ");
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                if ((c.getCodCliente()) == (rs.getInt("codCliente"))) {
+                    return true;
+                }
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        } finally {
+            closeConnection();
+        }
+        return false;
     }
 }

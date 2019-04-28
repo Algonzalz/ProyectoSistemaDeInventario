@@ -14,26 +14,20 @@ public class ProductoDaoImpl extends Conexion implements IProductoDAO {
         try {
             createConnection();
             pst = getCon().prepareStatement("INSERT INTO producto(codProducto, nbProducto, unidadProducto"
-                    + ", precioProducto, precioCompra_Prodcuto, descripcionProducto, StockActual_Producto, stockMinimo_Producto, codCategoria)"
+                    + ", precioProducto, precioCompra_Producto, descripcionProducto, StockActual_Producto, stockMinimo_Producto, codCategoria)"
                     + "VALUES(?,?,?,?,?,?,?,?,(SELECT codCategoria FROM categoria WHERE nbCategoria LIKE CONCAT('%',?,'%')))");
 
-//            pst.setString(1, c.getNbPersona());
-//            pst.setString(2, c.getApPersona());
-//            pst.setString(3, c.getDirPersona());
-//            pst.setString(4, c.getNumCel_Persona());
-//
-//            pst2.setString(1, "V-" + c.getCedCliente());
-//            pst2.setString(2, c.getCorreoCliente());
-            int N = pst.executeUpdate();
-            if (N != 0) {
-                int N2 = pst2.executeUpdate();
-                if (N2 != 0) {
-                } else {
-                    JOptionPane.showMessageDialog(null, "NO SE PUDO INGRESAR EL CLIENTE");
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "NO SE PUDO INGRESAR EL CLIENTE");
-            }
+            pst.setInt(1, p.getCodProducto());
+            pst.setString(2, p.getNbProducto());
+            pst.setString(3, p.getUnidadProducto());
+            pst.setDouble(4, p.getPrecioProducto());
+            pst.setDouble(5, p.getPrecioCompra_Producto());
+            pst.setString(6, p.getDescripcionProducto());
+            pst.setInt(7, p.getStockActual_Produto());
+            pst.setInt(8, p.getStockMinimo_Produto());
+
+            pst.executeUpdate();
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         } finally {
@@ -43,7 +37,30 @@ public class ProductoDaoImpl extends Conexion implements IProductoDAO {
 
     @Override
     public void modificarProducto(Producto p, String Categoria) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        try {
+            createConnection();
+
+            pst = getCon().prepareStatement("UPDATE INTO producto SET nbProducto = ?, unidadProducto = ?, precioProducto = ?, precioCompra_Producto = ?,"
+                    + "descripcionProducto = ?, stockActual_Producto = ?, stockMinimo_Producto = ?,"
+                    + " codCategoria = (SELECT codCategoria FROM categoria LIKE CONCAT ('%',?,'%') LIMIT 1 ) WHERE codProducto = ? ");
+
+            pst.setString(1, p.getNbProducto());
+            pst.setString(2, p.getUnidadProducto());
+            pst.setDouble(3, p.getPrecioProducto());
+            pst.setDouble(4, p.getPrecioCompra_Producto());
+            pst.setString(5, p.getDescripcionProducto());
+            pst.setInt(6, p.getStockActual_Produto());
+            pst.setInt(7, p.getStockMinimo_Produto());
+
+            pst.setInt(1, p.getCodProducto());
+            
+            pst.executeUpdate();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        } finally {
+            closeConnection();
+        }
     }
 
     @Override

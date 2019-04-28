@@ -20,6 +20,8 @@ public interface IProductoDAO{
     
     List<String> llenarComboBox();  //LLENAR EL COMBOBOX EN 
     
+    boolean verificarProducto(Producto p);
+    
     
     
     

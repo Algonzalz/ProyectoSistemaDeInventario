@@ -14,4 +14,5 @@ public interface ICrud<T> {
 
     List<T> consultar(T t);
 
+    boolean verificar(T t);
 }
