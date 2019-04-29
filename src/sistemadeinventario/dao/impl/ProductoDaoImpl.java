@@ -80,12 +80,15 @@ public class ProductoDaoImpl extends Conexion implements IProductoDAO {
                 JOptionPane.showMessageDialog(null, "El Prodcuto no existe en los registros, Verifique!!");
             }
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        } finally {
+            closeConnection();
         }
     }
 
     /**
-     * METODO PENSADO PARA MODIFICAR EL STOCK DEL PRODUCTO LUEGO DE
-     * COMPRAR(PENSADO EN FACTURA_PRODUCTO)
+     * METODO PENSADO PARA MODIFICAR EL STOCK DEL PRODUCTO LUEGO DE COMPRAR(EN
+     * FACTURA_PRODUCTO o FACTURA)
      */
     @Override
     public void modificarStockProducto(Producto p) {
@@ -98,56 +101,134 @@ public class ProductoDaoImpl extends Conexion implements IProductoDAO {
 
             pst.executeUpdate();
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        } finally {
+            closeConnection();
         }
 
     }
 
     @Override
     public List<Producto> listarXNombreProducto(Producto p) {
-       Producto p2=null;
-       List<Producto> arrP=new ArrayList<>();
-       
+        Producto p2 = null;
+        List<Producto> arrP = new ArrayList<>();
+
         try {
             createConnection();
-            pst=getCon().prepareStatement("SELECT codProdcuto, nbProducto, descripcionProducto, unidadProducto, "
+            pst = getCon().prepareStatement("SELECT codProducto, nbProducto, descripcionProducto, unidadProducto, "
                     + "precioProducto,stockActual_Producto, precioCompra_Producto, stockMinimo_Producto,"
-                    + "(SELECT nbCategoria FROM codCategoria WHERE codCategoria=codCategoria) as Nombre_Categoria"
+                    + "(SELECT nbCategoria FROM categoria WHERE codCategoria=codCategoria) as nbCategoria"
                     + "FROM producto WHERE nbProducto LIKE CONCAT ('%',?,'%') ORDER BY codProducto DESC");
             pst.setString(1, p.getNbProducto());
-            rs=pst.executeQuery();
-            while(rs.next()){
-                p2=new Producto();
-                
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                p2 = new Producto();
+
                 p2.setCodProducto(rs.getInt("codProducto"));
                 p2.setNbProducto(rs.getString("nbProducto"));
                 p2.setDescripcionProducto(rs.getString("descripcionProducto"));
                 p2.setUnidadProducto(rs.getString("unidadProducto"));
                 p2.setPrecioProducto(rs.getDouble("precioProducto"));
-                
-            
+                p2.setStockActual_Produto(rs.getInt("stockActual_Producto"));
+                p2.setPrecioCompra_Producto(rs.getDouble("precioCompra_Producto"));
+                p2.setStockMinimo_Produto(rs.getInt("stockMinimo_Producto"));
+                p2.setCodCategoria(rs.getInt("nbCategoria"));
+
+                arrP.add(p2);
             }
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        } finally {
+            closeConnection();
         }
+        return arrP;
     }
 
     @Override
     public List<Producto> listarXCodigoProducto(Producto p) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        Producto p2 = null;
+        List<Producto> arrP = new ArrayList<>();
 
-    @Override
-    public int productoIgual(Producto p) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            createConnection();
+            pst = getCon().prepareStatement("SELECT codProducto, nbProducto, descripcionProducto, unidadProducto, "
+                    + "precioProducto,stockActual_Producto, precioCompra_Producto, stockMinimo_Producto,"
+                    + "(SELECT nbCategoria FROM categoria WHERE codCategoria=codCategoria) as nbCategoria"
+                    + "FROM producto WHERE codProducto LIKE CONCAT ('%',?,'%') ORDER BY codProducto DESC");
+            pst.setInt(1, p.getCodProducto());
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                p2 = new Producto();
+
+                p2.setCodProducto(rs.getInt("codProducto"));
+                p2.setNbProducto(rs.getString("nbProducto"));
+                p2.setDescripcionProducto(rs.getString("descripcionProducto"));
+                p2.setUnidadProducto(rs.getString("unidadProducto"));
+                p2.setPrecioProducto(rs.getDouble("precioProducto"));
+                p2.setStockActual_Produto(rs.getInt("stockActual_Producto"));
+                p2.setPrecioCompra_Producto(rs.getDouble("precioCompra_Producto"));
+                p2.setStockMinimo_Produto(rs.getInt("stockMinimo_Producto"));
+                p2.setCodCategoria(rs.getInt("nbCategoria"));
+
+                arrP.add(p2);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        } finally {
+            closeConnection();
+        }
+        return arrP;
     }
 
     @Override
     public List<String> llenarComboBox() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<String> arrP = new ArrayList<>();
+
+        try {
+            createConnection();
+
+            pst = getCon().prepareStatement("SELECT nbCategoria FROM categoria");
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                arrP.add(rs.getString("nbCategoria"));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        } finally {
+            closeConnection();
+        }
+        return arrP;
     }
 
     @Override
     public boolean verificarProducto(Producto p) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            createConnection();
+
+            pst = getCon().prepareStatement("SELECT * FROM producto");
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                if ((p.getCodProducto()) == (rs.getInt("codProducto"))) {
+                    return true;
+                }
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        } finally {
+            closeConnection();
+        }
+        return false;
     }
 
+    /*
+    PRUEBAS PARA LOS METODOS
+     */
+//    public static void main(String[] args) {
+//        Producto p=new Producto();
+//        
+//        
+//    }
 }

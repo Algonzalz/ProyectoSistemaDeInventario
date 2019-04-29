@@ -16,7 +16,6 @@ public interface IProductoDAO{
     List<Producto> listarXNombreProducto(Producto p);
     List<Producto> listarXCodigoProducto(Producto p);// SE CREA UN METODO EN EL FORMULARIO PRODUCTO PARA 25/4/2019 !!!! (Borrar cuando termine)
     
-    int productoIgual(Producto p);
     
     List<String> llenarComboBox();  //LLENAR EL COMBOBOX EN 
     

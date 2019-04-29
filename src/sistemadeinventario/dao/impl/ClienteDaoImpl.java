@@ -214,7 +214,7 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
     public boolean verificar(Cliente c) {
         try {
             createConnection();
-            pst = getCon().prepareStatement("SELECT *FROM persona p INNER JOIN cliente c ON p.codPersona = c.codCliente ");
+            pst = getCon().prepareStatement("SELECT * FROM persona p INNER JOIN cliente c ON p.codPersona = c.codCliente ");
             rs = pst.executeQuery();
 
             while (rs.next()) {
