@@ -17,7 +17,7 @@ public interface IProductoDAO{
     List<Producto> listarXCodigoProducto(Producto p);// SE CREA UN METODO EN EL FORMULARIO PRODUCTO PARA 25/4/2019 !!!! (Borrar cuando termine)
     
     
-    List<String> llenarComboBox();  //LLENAR EL COMBOBOX EN 
+    List<String> llenarComboBox();  //LLENAR EL COMBOBOX DE CATEGORIAS
     
     boolean verificarProducto(Producto p);
     

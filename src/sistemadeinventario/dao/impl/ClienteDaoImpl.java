@@ -16,6 +16,7 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
     public void insertar(Cliente c) {
         try {
             createConnection();
+
             pst = getCon().prepareStatement("INSERT INTO persona(nbPersona,apPersona,dirPersona,numCel_Persona)"
                     + "VALUES(?,?,?,?)");
 
@@ -57,7 +58,7 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
                 pst2.setInt(3, c.getCodPersona());
                 pst.executeUpdate();
             } else {
-                JOptionPane.showMessageDialog(null, "El Cliente no existe en los registros, Verificque!!");
+                JOptionPane.showMessageDialog(null, "El Cliente no existe en los registros, Verifique!!");
             }
 
         } catch (Exception e) {
@@ -83,7 +84,7 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
 
                 pst.executeUpdate();
             } else {
-                JOptionPane.showMessageDialog(null, "El Cliente no existe en los registros, Verificque!!");
+                JOptionPane.showMessageDialog(null, "El Cliente no existe en los registros, Verifique!!");
             }
 
         } catch (Exception e) {
@@ -230,4 +231,5 @@ public class ClienteDaoImpl extends Conexion implements IClienteDAO {
         }
         return false;
     }
+    
 }
